@@ -1,0 +1,1 @@
+All the storage related code should be placed in repository
