@@ -19,6 +19,7 @@ type UsersRepository interface {
 	CreateUser(ctx context.Context, opts CreateUserOpts) (UserID uuid.UUID, err error)
 	// GetUsers returns list of an existing users
 	GetUsers(ctx context.Context) ([]entities.User, error)
+	GetPublicUsers(ctx context.Context) ([]entities.PublicUserInfo, error)
 	// TestUsername returns available Username ID
 	TestUsername(ctx context.Context, username string) (id int, err error)
 }

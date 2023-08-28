@@ -3,11 +3,9 @@ package users
 import (
 	"context"
 
-	"github.com/4nd3r5on/ctf1/internal/domain/entities"
 	"github.com/4nd3r5on/ctf1/pkg/password_utils"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"gitlab.com/4nd3rs0n/username"
 )
 
 type postgresUsersRepository struct {
@@ -30,38 +28,6 @@ func (ur *postgresUsersRepository) CreateUser(ctx context.Context, opts CreateUs
 		"RETURNING id;",
 		opts.Name, opts.EMail, passwordHash, salt, opts.UsernameBase).Scan(&userID)
 	return userID, err
-}
-
-func (ur *postgresUsersRepository) GetUsers(ctx context.Context) ([]entities.User, error) {
-	rows, err := ur.pool.Query(ctx, ""+
-		"SELECT (id, name, email, username_base, username_id, created_at) "+
-		"FROM public.users")
-	if err != nil {
-		return []entities.User{}, err
-	}
-
-	var users []entities.User
-	for rows.Next() {
-		var user entities.User
-		var usernameBase string
-		var usernameID int
-		err := rows.Scan(
-			&user.Id,
-			&user.Name,
-			&user.EMail,
-			&usernameBase, &usernameID)
-		if err != nil {
-			return []entities.User{}, err
-		}
-		user.Username, err = username.NewUsername(usernameBase, usernameID)
-		if err != nil {
-			return []entities.User{}, err
-		}
-		users = append(users, user)
-	}
-	rows.Close()
-
-	return users, nil
 }
 
 func (ur *postgresUsersRepository) TestUsername(ctx context.Context, username string) (int, error) {
