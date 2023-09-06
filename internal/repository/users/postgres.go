@@ -3,7 +3,7 @@ package user_repo
 import (
 	"context"
 
-	"github.com/4nd3r5on/ctf1/pkg/password_utils"
+	crypto_utils "github.com/4nd3r5on/ctf1/pkg/crypto"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -15,7 +15,7 @@ type postgresUsersRepository struct {
 func (ur *postgresUsersRepository) CreateUser(ctx context.Context, opts CreateUserOpts) (uuid.UUID, error) {
 	var userID uuid.UUID
 
-	passwordHash, salt, err := password_utils.HashPassword(opts.Password)
+	passwordHash, salt, err := crypto_utils.HashPassword(opts.Password)
 	if err != nil {
 		return uuid.Nil, err
 	}
