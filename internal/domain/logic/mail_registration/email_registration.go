@@ -10,7 +10,7 @@ import (
 	"github.com/4nd3r5on/ctf1/internal/repository"
 	mailRepo "github.com/4nd3r5on/ctf1/internal/repository/mail_verification"
 	userRepo "github.com/4nd3r5on/ctf1/internal/repository/users"
-	"github.com/4nd3r5on/ctf1/pkg/mail"
+	mail_utils "github.com/4nd3r5on/ctf1/pkg/mail"
 	"github.com/google/uuid"
 	"gitlab.com/4nd3rs0n/errorsx/domain_errors"
 )
@@ -46,7 +46,7 @@ func NewEMailVerification(
 	mr.AddMail(ctx, opts.EMail, verificationID)
 
 	// Sending an E-mail
-	err = mail.SendEmail(mail.SendMailOptions{
+	err = mail_utils.SendEmail(mail_utils.SendMailOptions{
 		From:         smtpConfig.From,
 		To:           opts.EMail,
 		SMTPServer:   smtpConfig.SMTPServer,

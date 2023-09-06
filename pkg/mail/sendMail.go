@@ -1,4 +1,4 @@
-package mail
+package mail_utils
 
 import "net/smtp"
 
