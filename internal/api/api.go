@@ -8,7 +8,7 @@ import (
 	"github.com/4nd3r5on/ctf1/internal/config"
 	mailRepo "github.com/4nd3r5on/ctf1/internal/repository/mail_verification"
 	userRepo "github.com/4nd3r5on/ctf1/internal/repository/users"
-	"github.com/4nd3r5on/ctf1/pkg/chi_utils"
+	chi_utils "github.com/4nd3r5on/ctf1/pkg/chi"
 	chi "github.com/go-chi/chi/v5"
 )
 

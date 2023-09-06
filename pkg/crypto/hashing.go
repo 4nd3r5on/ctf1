@@ -1,4 +1,4 @@
-package password_utils
+package crypto_utils
 
 import (
 	"bytes"
