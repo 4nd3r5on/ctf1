@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: ./dev.Dockerfile
+    ports: 
+      - 9000:9000
+    networks:
+      - ctf-1
+    volumes:
+      - ./:/app
+    restart: on-failure
+    env_file:
+      - .postgres.env
+      - .redis.env
+      - .smtp.env
+    depends_on:
+      - postgres
+      - redis
+  frontend:
+    ports: 
+      - 9010:9010
+    build: 
+      context: ./frontend
+      dockerfile: ./dev.Dockerfile
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - app
+    networks:
+      - ctf-1
+  postgres:
+    image: postgres:latest
+    ports: 
+      - 5432:5432
+    restart: always
+    env_file:
+      - .postgres.env
+    networks:
+      - ctf-1
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    restart: always
+    env_file:
+      - .redis.env
+    entrypoint: ["redis-server", "--requirepass", "\"${REDIS_PASSWORD}\", port=${REDIS_PORT}"]
+    networks:
+      - ctf-1
+  # SMTP server may be added latter
+
+networks:
+  ctf-1:
+    driver: bridge

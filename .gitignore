@@ -1,0 +1,15 @@
+# Sensetive
+.data/*
+.postgres.env
+.redis.env
+.smtp.env
+
+# Too big
+/**/bin/*
+/**/node_modules
+
+# IDEs
+.history/
+.vscode/*
+.DS_Store
+.idea
