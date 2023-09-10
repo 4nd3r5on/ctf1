@@ -30,7 +30,7 @@ func NewUserAPI(ctx context.Context, r chi.Router, opts UserApiOpts) {
 		r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			switch r.Method {
 			case http.MethodGet:
-				getUsers(ctx, w, r, opts.URepo)
+				getUsers(ctx, w, r, opts.URepo, opts.Logger)
 			default:
 				w.WriteHeader(http.StatusMethodNotAllowed)
 			}

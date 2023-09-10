@@ -9,16 +9,16 @@ import (
 )
 
 type User struct {
-	Id        uuid.UUID
-	Username  username.Username
-	Name      string
-	EMail     string
-	CreatedAt time.Time
+	Id        uuid.UUID         `json:"id"`
+	Username  username.Username `json:"username"`
+	Name      string            `json:"name"`
+	EMail     string            `json:"email"`
+	CreatedAt time.Time         `json:"createdAt"`
 }
 
 type PublicUserInfo struct {
-	Id        uuid.UUID
-	Username  username.Username
-	Name      string
-	CreatedAt time.Time
+	Id        uuid.UUID         `json:"id"`
+	Username  username.Username `json:"username"`
+	Name      string            `json:"name"`
+	CreatedAt time.Time         `json:"createdAt"`
 }

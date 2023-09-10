@@ -1,4 +1,4 @@
-package users
+package users_logic
 
 import (
 	"context"
