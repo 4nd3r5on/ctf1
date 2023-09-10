@@ -1,8 +1,6 @@
 package config
 
 import (
-	"log/slog"
-
 	"github.com/redis/go-redis/v9"
 )
 
@@ -58,7 +56,6 @@ type SMTPConfig struct {
 
 type MigrationConfig struct {
 	MigrationsPath string
-	VersionLimit   uint
-	DropDev        bool
-	Logger         *slog.Logger
+	VersionLimit   int
+	Drop           bool
 }

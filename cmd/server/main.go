@@ -11,6 +11,7 @@ import (
 
 func main() {
 	rand.Seed(0)
+	ctx := context.Background()
 
 	pgURL, envErr := cfg.GetPgUrlFromEnv()
 	if envErr != nil {
@@ -28,7 +29,7 @@ func main() {
 			envErr.Info().VarName, envErr.Error())
 	}
 
-	app, err := setup.NewApp(cfg.AppConfig{
+	app, err := setup.NewApp(ctx, cfg.AppConfig{
 		AppStage: cfg.APP_STAGE_DEV,
 
 		Address:   "0.0.0.0",
@@ -38,8 +39,12 @@ func main() {
 
 		EnableTLS: false,
 
-		PostgresURL:       pgURL,
-		PgMigrationConfig: cfg.MigrationConfig{},
+		PostgresURL: pgURL,
+		PgMigrationConfig: cfg.MigrationConfig{
+			MigrationsPath: "migrations",
+			VersionLimit:   -1,
+			Drop:           true,
+		},
 
 		RedisConfig: redisOpts,
 
@@ -49,6 +54,5 @@ func main() {
 		panic(err)
 	}
 
-	ctx := context.Background()
 	app.Run(ctx)
 }

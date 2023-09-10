@@ -1,6 +1,7 @@
 package setup
 
 import (
+	"context"
 	"errors"
 	"log/slog"
 
@@ -39,7 +40,7 @@ type App struct {
 	appStage int
 }
 
-func NewApp(cfg config.AppConfig) (App, error) {
+func NewApp(ctx context.Context, cfg config.AppConfig) (App, error) {
 	if cfg.AppStage == config.APP_STAGE_PROD {
 		if !cfg.EnableTLS {
 			return App{},
@@ -71,13 +72,15 @@ func NewApp(cfg config.AppConfig) (App, error) {
 		pathToCert: cfg.PathToCert,
 		pathToKey:  cfg.PathToKey,
 
+		pgURL: cfg.PostgresURL,
+
 		smtpConfig: cfg.SMTPConfig,
 	}
 
 	a.initLogger()
+	a.initPostgres(ctx, cfg.PgMigrationConfig)
 	// TODO:
-	// a.initPgxPool()
-	// a.initRedisClient()
+	// a.initRedis()
 	// a.initMailRepo()
 
 	return a, nil
