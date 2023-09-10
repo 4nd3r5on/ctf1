@@ -7,6 +7,7 @@ import (
 	"log/slog"
 
 	cfg "github.com/4nd3r5on/ctf1/internal/config"
+	user_repo "github.com/4nd3r5on/ctf1/internal/repository/users"
 	db_utils "github.com/4nd3r5on/ctf1/pkg/db"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
@@ -48,6 +49,8 @@ func (a *App) initPostgres(ctx context.Context, mCfg cfg.MigrationConfig) error 
 	if err != nil {
 		a.logger.Error("Failed to initialize pgx pool")
 	}
+
+	a.userRepo = user_repo.NewUsersRepository(a.pgPool)
 
 	return err
 }
