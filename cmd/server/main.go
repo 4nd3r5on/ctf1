@@ -43,7 +43,7 @@ func main() {
 		PgMigrationConfig: cfg.MigrationConfig{
 			MigrationsPath: "migrations",
 			VersionLimit:   -1,
-			Drop:           true,
+			Drop:           false,
 		},
 
 		RedisConfig: redisOpts,

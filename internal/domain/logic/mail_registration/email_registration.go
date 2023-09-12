@@ -23,8 +23,7 @@ type NewEMailVerificationOpts struct {
 }
 
 // Sends varification mail to specified address
-func NewEMailVerification(
-	ctx context.Context,
+func NewEMailVerification(ctx context.Context,
 	mr mailRepo.MailVerificationRepository,
 	smtpConfig config.SMTPConfig, opts NewEMailVerificationOpts) domain_errors.DomainErr {
 

@@ -19,18 +19,18 @@ services:
     depends_on:
       - postgres
       - redis
-  frontend:
-    ports: 
-      - 9010:9010
-    build: 
-      context: ./frontend
-      dockerfile: ./dev.Dockerfile
-    volumes:
-      - ./frontend:/app
-    depends_on:
-      - app
-    networks:
-      - ctf-1
+  # frontend:
+  #   ports: 
+  #     - 9010:9010
+  #   build: 
+  #     context: ./frontend
+  #     dockerfile: ./dev.Dockerfile
+  #   volumes:
+  #     - ./frontend:/app
+  #   depends_on:
+  #     - app
+  #   networks:
+  #     - ctf-1
   postgres:
     image: postgres:latest
     ports: 
@@ -47,7 +47,9 @@ services:
     restart: always
     env_file:
       - .redis.env
-    entrypoint: ["redis-server", "--requirepass", "\"${REDIS_PASSWORD}\", port=${REDIS_PORT}"]
+    entrypoint: [
+      "/bin/sh", "-c", "redis-server", 
+      "--requirepass", "\"${REDIS_PASSWORD}\"", "--port=\"${REDIS_PORT}\""]
     networks:
       - ctf-1
   # SMTP server may be added latter

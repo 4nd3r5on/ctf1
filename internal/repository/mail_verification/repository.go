@@ -19,7 +19,8 @@ type MailVerificationRepository interface {
 }
 
 func NewMailApprovementsRepository(rdb *redis.Client) MailVerificationRepository {
-	return &redisMailVerificationRepository{
+	repo := redisMailVerificationRepository{
 		rdb: rdb,
 	}
+	return &repo
 }

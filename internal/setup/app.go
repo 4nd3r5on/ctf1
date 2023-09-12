@@ -74,14 +74,18 @@ func NewApp(ctx context.Context, cfg config.AppConfig) (App, error) {
 
 		pgURL: cfg.PostgresURL,
 
+		redisOptions: cfg.RedisConfig,
+
 		smtpConfig: cfg.SMTPConfig,
 	}
 
 	a.initLogger()
-	a.initPostgres(ctx, cfg.PgMigrationConfig)
-	// TODO:
-	// a.initRedis()
-	// a.initMailRepo()
+	if err := a.initPostgres(ctx, cfg.PgMigrationConfig); err != nil {
+		return App{}, err
+	}
+	if err := a.initRedis(ctx); err != nil {
+		return App{}, err
+	}
 
 	return a, nil
 }

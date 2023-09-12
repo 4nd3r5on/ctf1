@@ -7,6 +7,7 @@ import (
 	"log/slog"
 
 	cfg "github.com/4nd3r5on/ctf1/internal/config"
+	mail_repo "github.com/4nd3r5on/ctf1/internal/repository/mail_verification"
 	user_repo "github.com/4nd3r5on/ctf1/internal/repository/users"
 	db_utils "github.com/4nd3r5on/ctf1/pkg/db"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -48,6 +49,12 @@ func (a *App) initPostgres(ctx context.Context, mCfg cfg.MigrationConfig) error 
 	a.pgPool, err = pgxpool.New(ctx, a.pgURL)
 	if err != nil {
 		a.logger.Error("Failed to initialize pgx pool")
+		return err
+	}
+	if err := a.pgPool.Ping(ctx); err != nil {
+		a.logger.Error("Failed to ping PostgreSQL",
+			slog.String("error", err.Error()))
+		return err
 	}
 
 	a.userRepo = user_repo.NewUsersRepository(a.pgPool)
@@ -55,6 +62,16 @@ func (a *App) initPostgres(ctx context.Context, mCfg cfg.MigrationConfig) error 
 	return err
 }
 
-func (a *App) initRedis(ctx context.Context) {
+func (a *App) initRedis(ctx context.Context) error {
 	a.redisClient = redis.NewClient(a.redisOptions)
+
+	if err := a.redisClient.Ping(ctx).Err(); err != nil {
+		a.logger.Error("Failed to ping Redis DB",
+			slog.String("error", err.Error()))
+		return err
+	}
+
+	a.mailRepo = mail_repo.NewMailApprovementsRepository(a.redisClient)
+
+	return nil
 }
