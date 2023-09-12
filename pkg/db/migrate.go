@@ -99,7 +99,7 @@ func DoMigrate(ctx context.Context, cfg MigrationConfig) (uint, bool, MigrationE
 		}
 	}
 
-	if cfg.VersionLimit == int(ver) && cfg.VersionLimit >= 0 {
+	if cfg.VersionLimit == int(ver) {
 		cfg.Logger.Debug("DB is already up to date")
 		return ver, dirty, nil
 	}
@@ -122,8 +122,12 @@ func DoMigrate(ctx context.Context, cfg MigrationConfig) (uint, bool, MigrationE
 		err = m.Up()
 	}
 	if err != nil {
-		return 0, false, NewMigrationErr(err.Error(), map[string]any{
-			"on": OnNewInstance, "version_limit": cfg.VersionLimit})
+		if err != migrate.ErrNoChange {
+			return 0, false, NewMigrationErr(err.Error(), map[string]any{
+				"on": OnNewInstance, "version_limit": cfg.VersionLimit})
+		}
+		cfg.Logger.Debug("DB is already up to date")
+		return ver, dirty, nil
 	}
 
 	ver, dirty, err = m.Version()
